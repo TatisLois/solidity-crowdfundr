@@ -31,13 +31,13 @@ contract Crowdfunder {
 
     Project[] public projects;
 
-    modifier isProjectOwner(uint256 _id) {
+    modifier isProjectOwner(uint256 _projectId) {
         uint256[] memory ownerProjectsIds = ownersProjectsIds[msg.sender];
         bool ownsProject = false;
 
         for (uint256 i = 0; i < ownerProjectsIds.length; i++) {
             uint256 currentId = ownerProjectsIds[i];
-            if (currentId == _id) {
+            if (currentId == _projectId) {
                 ownsProject = true;
             }
         }
@@ -65,8 +65,8 @@ contract Crowdfunder {
         _;
     }
 
-    modifier isProjectFundable(uint256 projectId) {
-        Project memory currentProject = projects[projectId];
+    modifier isProjectFundable(uint256 _projectId) {
+        Project memory currentProject = projects[_projectId];
         Status status = currentProject.status;
         uint256 endDate = currentProject.endDate;
         uint256 fundingAmount = currentProject.fundingAmount;
@@ -81,8 +81,8 @@ contract Crowdfunder {
         _;
     }
 
-    modifier isProjectFundingMet(uint256 projectId) {
-        Project memory currentProject = projects[projectId];
+    modifier isProjectFundingMet(uint256 _projectId) {
+        Project memory currentProject = projects[_projectId];
         uint256 fundingAmount = currentProject.fundingAmount;
         uint256 fundingGoal = currentProject.fundingGoal;
         Status status = currentProject.status;
@@ -95,8 +95,8 @@ contract Crowdfunder {
         _;
     }
 
-    modifier isProjectRefundable(uint256 projectId) {
-        Project memory currentProject = projects[projectId];
+    modifier isProjectRefundable(uint256 _projectId) {
+        Project memory currentProject = projects[_projectId];
         Status status = currentProject.status;
         uint256 fundingAmount = currentProject.fundingAmount;
         uint256 fundingGoal = currentProject.fundingGoal;
@@ -128,10 +128,10 @@ contract Crowdfunder {
         ownersProjectsIds[msg.sender].push(projectId);
     }
 
-    function contributeToProject(uint256 projectId)
+    function contributeToProject(uint256 _projectId)
         public
         payable
-        isProjectFundable(projectId)
+        isProjectFundable(_projectId)
     {
         require(
             msg.value >= minContributionAmount,
@@ -141,20 +141,20 @@ contract Crowdfunder {
         uint256 amount = msg.value;
         Contribution memory newContribution = Contribution({
             amountFunded: amount,
-            projectId: projectId
+            projectId: _projectId
         });
-        Project storage currentProject = projects[projectId];
+        Project storage currentProject = projects[_projectId];
         currentProject.fundingAmount = currentProject.fundingAmount + amount;
         contributions[msg.sender].push(newContribution);
     }
 
-    function withdrawFromAProject(uint256 projectId)
+    function withdrawFromAProject(uint256 _projectId)
         public
-        isProjectOwner(projectId)
-        isProjectFundingMet(projectId)
+        isProjectOwner(_projectId)
+        isProjectFundingMet(_projectId)
         returns (bool)
     {
-        Project storage currentProject = projects[projectId];
+        Project storage currentProject = projects[_projectId];
         currentProject.status = Status.DONE;
         uint256 amount = currentProject.fundingAmount;
         currentProject.fundingAmount = 0;
@@ -162,19 +162,19 @@ contract Crowdfunder {
         return true;
     }
 
-    function refundFromAProject(uint256 projectId)
+    function refundFromAProject(uint256 _projectId)
         public
         payable
-        isContributor(projectId)
-        isProjectRefundable(projectId)
+        isContributor(_projectId)
+        isProjectRefundable(_projectId)
     {
-        Project storage currentProject = projects[projectId];
+        Project storage currentProject = projects[_projectId];
         Contribution[] storage currentContributions = contributions[msg.sender];
 
         for (uint256 i = 0; i < currentContributions.length; i++) {
             Contribution storage currentContribution = currentContributions[i];
 
-            if (currentContribution.projectId == projectId) {
+            if (currentContribution.projectId == _projectId) {
                 uint256 amount = currentContribution.amountFunded;
                 // save amount refund ammount sub amount
                 currentContribution.amountFunded = 0;
@@ -186,11 +186,11 @@ contract Crowdfunder {
         }
     }
 
-    function archiveAProject(uint256 projectId)
+    function archiveAProject(uint256 _projectId)
         public
-        isProjectOwner(projectId)
+        isProjectOwner(_projectId)
     {
-        Project storage currentProject = projects[projectId];
+        Project storage currentProject = projects[_projectId];
         require(
             uint256(currentProject.status) != uint256(Status.ARCHIVED),
             "Project is archived"
