@@ -31,8 +31,6 @@ contract Crowdfunder {
 
     Project[] public projects;
 
-    // Can this cause a hack where someone randoms the ID? but that id would never be in their array so no?
-    // Can a requre work in for loop
     modifier isProjectOwner(uint256 _id) {
         uint256[] memory ownerProjectsIds = ownersProjectsIds[msg.sender];
         bool ownsProject = false;
