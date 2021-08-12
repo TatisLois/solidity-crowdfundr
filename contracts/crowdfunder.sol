@@ -196,7 +196,6 @@ contract Crowdfunder {
 
             if (currentContribution.projectId == _projectId) {
                 uint256 amount = currentContribution.amountFunded;
-                // save amount refund ammount sub amount
                 currentContribution.amountFunded = 0;
                 currentProject.fundingAmount =
                     currentProject.fundingAmount -
