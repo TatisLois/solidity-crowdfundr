@@ -9,25 +9,6 @@ async function fastCrowdfunderDeployHelper() {
   return crowdfunder;
 }
 
-// todo after test, update public to external where it makes sense
-
-/**
- * x - Can contribute to a project you own
- * x - Can contribute to a project you don't own
- * x - Can't contribute to a project if it's isProjectFundable scenarios
- * x - Track my contribuitons over multiple projects
- *
- *
- * Can withdraw from a successful project
- * Can't withdraw from someone elses project
- * Can't withdraw premature
- *
- * X - Can archive a project
- *
- * X - Can get a refund from a project
- *
- */
-
 describe("Smart Contract: Crowdfunder", function () {
   it("Ensure the minimum balance is correct", async function () {
     const crowdfunder = await fastCrowdfunderDeployHelper();
@@ -35,14 +16,6 @@ describe("Smart Contract: Crowdfunder", function () {
     const expectedMinContributionAmount = BigNumber.from("10000000000000000");
     const minContributionAmount = await crowdfunder.minContributionAmount();
     expect(minContributionAmount).to.equal(expectedMinContributionAmount);
-    // expect(await greeter.greet()).to.equal("Hello, world!");
-
-    // const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
-
-    // wait until the transaction is mined
-    // await setGreetingTx.wait();
-
-    // expect(await greeter.greet()).to.equal("Hola, mundo!");
   });
 
   it("Ensure a project can be created", async function () {
