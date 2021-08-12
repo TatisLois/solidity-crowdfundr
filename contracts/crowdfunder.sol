@@ -1,3 +1,5 @@
+//SPDX-License-Identifier: Unlicense
+
 pragma solidity >=0.7.0 <0.9.0;
 
 contract Crowdfunder {
@@ -30,6 +32,15 @@ contract Crowdfunder {
     mapping(address => Contribution[]) public contributions;
 
     Project[] public projects;
+
+    event createdProject(
+        address indexed owner,
+        string title,
+        uint256 fundingAmount,
+        uint256 fundingGoal,
+        address beneficiary,
+        Status status
+    );
 
     modifier isProjectOwner(uint256 _projectId) {
         uint256[] memory ownerProjectsIds = ownersProjectsIds[msg.sender];
@@ -126,6 +137,15 @@ contract Crowdfunder {
         projects.push(newProject);
         uint256 projectId = projects.length - 1;
         ownersProjectsIds[msg.sender].push(projectId);
+
+        emit createdProject(
+            msg.sender,
+            newProject.title,
+            newProject.fundingAmount,
+            newProject.fundingGoal,
+            newProject.beneficiary,
+            newProject.status
+        );
     }
 
     function contributeToProject(uint256 _projectId)

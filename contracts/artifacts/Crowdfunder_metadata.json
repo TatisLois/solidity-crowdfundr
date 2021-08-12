@@ -6,10 +6,53 @@
 	"output": {
 		"abi": [
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "fundingAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "fundingGoal",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "beneficiary",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum Crowdfunder.Status",
+						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"name": "createdProject",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "projectId",
+						"name": "_projectId",
 						"type": "uint256"
 					}
 				],
@@ -22,7 +65,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "projectId",
+						"name": "_projectId",
 						"type": "uint256"
 					}
 				],
@@ -144,7 +187,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "projectId",
+						"name": "_projectId",
 						"type": "uint256"
 					}
 				],
@@ -157,7 +200,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "projectId",
+						"name": "_projectId",
 						"type": "uint256"
 					}
 				],
@@ -201,10 +244,11 @@
 	},
 	"sources": {
 		"contracts/crowdfunder.sol": {
-			"keccak256": "0xc514d59f3bf87e2743e2ffbae047f423379d5adf5ae3b4b1834046117f654738",
+			"keccak256": "0x4d6db747c560dd5a50adedd9945675eeab29b0b66b38e116fdb7570966cba9a4",
+			"license": "Unlicense",
 			"urls": [
-				"bzz-raw://ff7b263941e4dd554a24c055a9319c04783db14dd82d6f362a252e3aad65369d",
-				"dweb:/ipfs/QmRGNcpNP6UhZiqWhRbYsms6r89gtcEzLLuBQ9GzhVJPkE"
+				"bzz-raw://f8d73f0b3f4226d1a2b4714cafe7422c0ff8d3fc53f73032facb6b9fb7611591",
+				"dweb:/ipfs/QmUdcHrRe4Yn7xxHegSEVHjHgaS5d9kevjTZ6XUcJuibVY"
 			]
 		}
 	},
