@@ -28,7 +28,7 @@ contract Crowdfunder {
 
     uint256 public minContributionAmount = 10000000000000000 wei;
 
-    mapping(address => uint256[]) ownersProjectsIds;
+    mapping(address => uint256[]) projectIdsByOwner;
     mapping(address => Contribution[]) public contributions;
 
     Project[] public projects;
@@ -43,7 +43,7 @@ contract Crowdfunder {
     );
 
     modifier isProjectOwner(uint256 _projectId) {
-        uint256[] memory ownerProjectsIds = ownersProjectsIds[msg.sender];
+        uint256[] memory ownerProjectsIds = projectIdsByOwner[msg.sender];
         bool ownsProject = false;
 
         for (uint256 i = 0; i < ownerProjectsIds.length; i++) {
@@ -86,9 +86,9 @@ contract Crowdfunder {
         require(status == Status.ACTIVE, "Project is not active");
         require(
             fundingAmount < fundingGoal,
-            "Project has met it's funding goal"
+            "Project has met its funding goal"
         );
-        require(block.timestamp <= endDate, "Project fund raising is over");
+        require(block.timestamp <= endDate, "Project fundraising is over");
         _;
     }
 
@@ -136,7 +136,7 @@ contract Crowdfunder {
         });
         projects.push(newProject);
         uint256 projectId = projects.length - 1;
-        ownersProjectsIds[msg.sender].push(projectId);
+        projectIdsByOwner[msg.sender].push(projectId);
 
         emit createdProject(
             msg.sender,
