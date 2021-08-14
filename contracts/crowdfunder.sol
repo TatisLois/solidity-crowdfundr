@@ -200,7 +200,8 @@ contract Crowdfunder {
                 currentProject.fundingAmount =
                     currentProject.fundingAmount -
                     amount;
-                payable(msg.sender).transfer(amount);
+                (bool success, ) = msg.sender.call{value:amount}("");
+                require(success, "Transfer failed.");
             }
         }
     }
