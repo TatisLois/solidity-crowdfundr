@@ -304,7 +304,7 @@ describe("Smart Contract: Crowdfunder", function () {
       // Should fail if reaching the next assertion
       expect(true).to.be.false;
     } catch (error) {
-      expect(error).to.match(/Project has met it's funding goal/);
+      expect(error).to.match(/Project has met its funding goal/);
       expect(error).to.be.an.instanceof(Error);
     }
   });
@@ -332,7 +332,7 @@ describe("Smart Contract: Crowdfunder", function () {
       // Should fail if reaching the next assertion
       expect(true).to.be.false;
     } catch (error) {
-      expect(error).to.match(/Project fund raising is over/);
+      expect(error).to.match(/Project fundraising is over/);
       expect(error).to.be.an.instanceof(Error);
     }
   });
