@@ -122,6 +122,25 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_projectId",
+						"type": "uint256"
+					}
+				],
+				"name": "isMyProject",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "minContributionAmount",
 				"outputs": [
@@ -229,7 +248,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/crowdfunder.sol": "Crowdfunder"
+			"contracts/CrowdFunder.sol": "Crowdfunder"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -243,12 +262,20 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/crowdfunder.sol": {
-			"keccak256": "0x4d6db747c560dd5a50adedd9945675eeab29b0b66b38e116fdb7570966cba9a4",
+		"contracts/CrowdFunder.sol": {
+			"keccak256": "0xf6de6025ecea43a3ca622cac58ce4ab454769c51e178aa1f75fd64488a750a0b",
 			"license": "Unlicense",
 			"urls": [
-				"bzz-raw://f8d73f0b3f4226d1a2b4714cafe7422c0ff8d3fc53f73032facb6b9fb7611591",
-				"dweb:/ipfs/QmUdcHrRe4Yn7xxHegSEVHjHgaS5d9kevjTZ6XUcJuibVY"
+				"bzz-raw://4d0c9b4255b680ba659d74a6f645f29e7a6a9251997d2a7c88fd6438eb3ee855",
+				"dweb:/ipfs/QmTeQuY442k7JTkP79GK2TS5xLQdwUUmsHrzYp6ArND1yH"
+			]
+		},
+		"hardhat/console.sol": {
+			"keccak256": "0x72b6a1d297cd3b033d7c2e4a7e7864934bb767db6453623f1c3082c6534547f4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a8cb8681076e765c214e0d51cac989325f6b98e315eaae06ee0cbd5a9f084763",
+				"dweb:/ipfs/QmNWGHi4zmjxQTYN3NMGnJd49jBT5dE4bxTdWEaDuJrC6N"
 			]
 		}
 	},

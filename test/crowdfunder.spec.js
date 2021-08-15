@@ -238,10 +238,10 @@ describe("Smart Contract: Crowdfunder", function () {
 
     const otherPersonContribution = await crowdfunder
       .connect(otherPerson)
-      .contributions(otherPerson.address, 0);
+      .projectContributionByOwner(otherPerson.address, 0);
     const ownerPersonContribution = await crowdfunder
       .connect(projectCreator)
-      .contributions(projectCreator.address, 0);
+      .projectContributionByOwner(projectCreator.address, 0);
 
     const returnedOtherPersonContribution =
       otherPersonContribution["amountFunded"];
@@ -493,7 +493,7 @@ describe("Smart Contract: Crowdfunder", function () {
 
     const preRefundContribution = await crowdfunder
       .connect(projectCreator)
-      .contributions(projectCreator.address, 0);
+      .projectContributionByOwner(projectCreator.address, 0);
     const preRefundProject = await crowdfunder.projects(id);
     const preRefundFundingAmount = preRefundProject["fundingAmount"];
 
@@ -501,7 +501,7 @@ describe("Smart Contract: Crowdfunder", function () {
 
     const postRefundContribution = await crowdfunder
       .connect(projectCreator)
-      .contributions(projectCreator.address, 0);
+      .projectContributionByOwner(projectCreator.address, 0);
     const postRefundProject = await crowdfunder.projects(id);
     const postRefundFundingAmount = postRefundProject["fundingAmount"];
 
@@ -539,21 +539,21 @@ describe("Smart Contract: Crowdfunder", function () {
 
     const firstPreRefundContribution = await crowdfunder
       .connect(projectCreator)
-      .contributions(projectCreator.address, 0);
+      .projectContributionByOwner(projectCreator.address, 0);
 
     const secondPreRefundContribution = await crowdfunder
       .connect(projectCreator)
-      .contributions(projectCreator.address, 0);
+      .projectContributionByOwner(projectCreator.address, 0);
 
     await crowdfunder.connect(projectCreator).refundFromAProject(id);
 
     const firstPostRefundContribution = await crowdfunder
       .connect(projectCreator)
-      .contributions(projectCreator.address, 0);
+      .projectContributionByOwner(projectCreator.address, 0);
 
     const secondPostRefundContribution = await crowdfunder
       .connect(projectCreator)
-      .contributions(projectCreator.address, 0);
+      .projectContributionByOwner(projectCreator.address, 0);
 
     expect(firstPreRefundContribution.amountFunded.eq(contributionAmount)).to.be
       .true;

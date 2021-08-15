@@ -28,8 +28,8 @@ contract Crowdfunder {
 
     uint256 public minContributionAmount = 10000000000000000 wei;
 
-    mapping(address => uint256[]) projectIdsByOwner;
-    mapping(address => Contribution[]) public contributions;
+    mapping(address => mapping(uint256 => bool)) projectIdToOwner;
+    mapping(address =>  mapping(uint256 => Contribution)) public projectContributionByOwner;
 
     Project[] public projects;
 
@@ -42,16 +42,20 @@ contract Crowdfunder {
         Status status
     );
 
-    modifier isProjectOwner(uint256 _projectId) {
-        uint256[] memory ownerProjectsIds = projectIdsByOwner[msg.sender];
-        bool ownsProject = false;
+    event sentContribution(
+        address indexed owner,
+        uint256 amountFunded,
+        uint256 projectId
+    );
 
-        for (uint256 i = 0; i < ownerProjectsIds.length; i++) {
-            uint256 currentId = ownerProjectsIds[i];
-            if (currentId == _projectId) {
-                ownsProject = true;
-            }
-        }
+    event refundProccessed(
+        address indexed owner,
+        uint256 amountRefunded,
+        uint256 projectId
+    );
+
+    modifier isProjectOwner(uint256 _projectId) {
+        bool ownsProject = projectIdToOwner[msg.sender][_projectId];
         require(
             ownsProject,
             "You do not own this project or this project does not exist"
@@ -60,17 +64,10 @@ contract Crowdfunder {
     }
 
     modifier isContributor(uint256 _projectId) {
-        Contribution[] memory ownerContributions = contributions[msg.sender];
-        bool madeContribution = false;
-
-        for (uint256 i = 0; i < ownerContributions.length; i++) {
-            Contribution memory currentContribution = ownerContributions[i];
-            if (currentContribution.projectId == _projectId) {
-                madeContribution = true;
-            }
-        }
+        Contribution memory contribution = projectContributionByOwner[msg.sender][_projectId];
+        uint amount = contribution.amountFunded;
         require(
-            madeContribution,
+            amount >= minContributionAmount,
             "You have not made a contribution to this project or this project does not exist"
         );
         _;
@@ -124,6 +121,10 @@ contract Crowdfunder {
         _;
     }
 
+    function isMyProject(uint256 _projectId) public view returns (bool) {
+      return projectIdToOwner[msg.sender][_projectId];
+    }
+
     function createProject(string memory _title, uint256 _fundingGoal) public {
         Project memory newProject = Project({
             title: _title,
@@ -136,7 +137,7 @@ contract Crowdfunder {
         });
         projects.push(newProject);
         uint256 projectId = projects.length - 1;
-        projectIdsByOwner[msg.sender].push(projectId);
+        projectIdToOwner[msg.sender][projectId] = true;
 
         emit createdProject(
             msg.sender,
@@ -165,7 +166,13 @@ contract Crowdfunder {
         });
         Project storage currentProject = projects[_projectId];
         currentProject.fundingAmount = currentProject.fundingAmount + amount;
-        contributions[msg.sender].push(newContribution);
+        projectContributionByOwner[msg.sender][_projectId] = newContribution;
+
+        emit sentContribution(
+          msg.sender,
+          amount,
+          _projectId
+        );
     }
 
     function withdrawFromAProject(uint256 _projectId)
@@ -189,21 +196,18 @@ contract Crowdfunder {
         isProjectRefundable(_projectId)
     {
         Project storage currentProject = projects[_projectId];
-        Contribution[] storage currentContributions = contributions[msg.sender];
+        Contribution storage contribution = projectContributionByOwner[msg.sender][_projectId];
+        uint amount = contribution.amountFunded;
+        contribution.amountFunded = 0;
+        currentProject.fundingAmount = currentProject.fundingAmount - amount;
+        (bool success, ) = msg.sender.call{value:amount}("");
+        require(success, "Transfer failed.");
 
-        for (uint256 i = 0; i < currentContributions.length; i++) {
-            Contribution storage currentContribution = currentContributions[i];
-
-            if (currentContribution.projectId == _projectId) {
-                uint256 amount = currentContribution.amountFunded;
-                currentContribution.amountFunded = 0;
-                currentProject.fundingAmount =
-                    currentProject.fundingAmount -
-                    amount;
-                (bool success, ) = msg.sender.call{value:amount}("");
-                require(success, "Transfer failed.");
-            }
-        }
+        emit refundProccessed(
+          msg.sender,
+          amount,
+          contribution.projectId
+        );
     }
 
     function archiveAProject(uint256 _projectId)
